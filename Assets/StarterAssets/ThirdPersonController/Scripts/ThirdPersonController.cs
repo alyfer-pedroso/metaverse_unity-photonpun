@@ -113,6 +113,7 @@ namespace StarterAssets
         private CinemachineVirtualCamera _cinemachineVirtualCamera;
         [SerializeField] private TMP_Text _nickname;
         [SerializeField] private GameObject _myCanvas;
+        [SerializeField] private bool _cursorLocked = true;
 
         private const float _threshold = 0.01f;
 
@@ -159,26 +160,27 @@ namespace StarterAssets
         {
             _pv = GetComponent<PhotonView>();
 
-            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-
-            _hasAnimator = TryGetComponent(out _animator);
-            _controller = GetComponent<CharacterController>();
-            _input = GetComponent<StarterAssetsInputs>();
-
             if (_pv.IsMine)
             {
+                _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+
+                _hasAnimator = TryGetComponent(out _animator);
+                _controller = GetComponent<CharacterController>();
+                _input = GetComponent<StarterAssetsInputs>();
+
                 _playerInput = GetComponent<PlayerInput>();
                 _playerInput.enabled = true;
                 _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
                 _cinemachineVirtualCamera.Follow = transform.GetChild(0);
+                LockCursor();
+
+                AssignAnimationIDs();
+
+                // reset our timeouts on start
+                _jumpTimeoutDelta = JumpTimeout;
+                _fallTimeoutDelta = FallTimeout;
             }
             _nickname.text = _pv.Owner.NickName;
-
-            AssignAnimationIDs();
-
-            // reset our timeouts on start
-            _jumpTimeoutDelta = JumpTimeout;
-            _fallTimeoutDelta = FallTimeout;
         }
 
         private void Update()
@@ -186,17 +188,37 @@ namespace StarterAssets
             if (_pv.IsMine)
             {
                 _hasAnimator = TryGetComponent(out _animator);
-
                 JumpAndGravity();
                 GroundedCheck();
                 Move();
+                HandleCursor();
             }
             _myCanvas.transform.LookAt(Camera.main.transform);
         }
 
         private void LateUpdate()
         {
-            CameraRotation();
+            if (_pv.IsMine) CameraRotation();
+        }
+
+        private void LockCursor()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            _cursorLocked = true;
+        }
+
+        private void UnlockCursor()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            _cursorLocked = false;
+        }
+
+        private void HandleCursor()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                if (_cursorLocked) UnlockCursor(); else LockCursor();
         }
 
         private void AssignAnimationIDs()
@@ -225,6 +247,8 @@ namespace StarterAssets
 
         private void CameraRotation()
         {
+            if (!_cursorLocked) return;
+
             // if there is an input and camera position is not fixed
             if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
@@ -246,6 +270,8 @@ namespace StarterAssets
 
         private void Move()
         {
+            if (!_cursorLocked) return;
+
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
@@ -314,6 +340,8 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
+            if (!_cursorLocked) return;
+
             if (Grounded)
             {
                 // reset the fall timeout timer

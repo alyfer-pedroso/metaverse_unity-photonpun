@@ -1261,6 +1261,7 @@ MonoBehaviour:
   LockCameraPosition: 0
   _nickname: {fileID: 3694424434368338437}
   _myCanvas: {fileID: 3579875426490583578}
+  _cursorLocked: 1
 --- !u!114 &5885216827943657505
 MonoBehaviour:
   m_ObjectHideFlags: 0

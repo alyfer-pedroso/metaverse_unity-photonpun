@@ -1,0 +1,4 @@
+repository "metaverse_unity-photonpun@CC2S@cloud"
+  path "/"
+    br "/main"
+    co "/main"

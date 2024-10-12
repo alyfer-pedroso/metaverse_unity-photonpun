@@ -7,7 +7,7 @@ using TMPro;
 
 public class Conn : MonoBehaviourPunCallbacks
 {
-    [Header("Configs")]
+    [Header("System Configuration")]
     [SerializeField] private GameObject _loginPanel;
     [SerializeField] private GameObject _lobbyPanel;
     [SerializeField] private GameObject _roomPanel;
@@ -17,6 +17,12 @@ public class Conn : MonoBehaviourPunCallbacks
 
     [Header("Player")]
     [SerializeField] private GameObject _playerPrefab;
+
+    [Header("Chat Configuration")]
+    [SerializeField] private TMP_InputField _chatInputField;
+    [SerializeField] private TMP_Text _chatDisplay;
+
+    private readonly List<string> chatMessages = new();
 
 
     // Start is called before the first frame update
@@ -41,10 +47,37 @@ public class Conn : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinOrCreateRoom(_roomnameInput.text, new RoomOptions(), TypedLobby.Default);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
+    public void SendMessageToChat(string message)
+    {
+        SendMessageRPC(message);
+    }
+
+    public void SendInputMessageToChat()
+    {
+        if (_chatInputField != null && !string.IsNullOrEmpty(_chatInputField.text))
+        {
+            SendMessageToChat($"{PhotonNetwork.NickName}: {_chatInputField.text}");
+        }
+    }
+
+    public void SendMessageRPC(string message)
+    {
+        photonView.RPC("ReceiveMessage", RpcTarget.All, message);
+        _chatInputField.text = "";
+    }
+
+    [PunRPC]
+    public void ReceiveMessage(string message)
+    {
+        chatMessages.Add(message);
+        if (chatMessages.Count > 10) chatMessages.RemoveAt(0);
+        UpdateChatDisplay();
+    }
+
+    public void UpdateChatDisplay()
+    {
+        _chatDisplay.text = string.Join("\n", chatMessages);
     }
 
     public void UpdateRoomData()
@@ -95,12 +128,12 @@ public class Conn : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         UpdateRoomData();
-        Debug.Log($"{newPlayer.NickName} joined the room");
+        SendMessageToChat($"{newPlayer.NickName} joined the room");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         UpdateRoomData();
-        Debug.Log($"{otherPlayer.NickName} left the room");
+        SendMessageToChat($"{otherPlayer.NickName} left the room");
     }
 }
