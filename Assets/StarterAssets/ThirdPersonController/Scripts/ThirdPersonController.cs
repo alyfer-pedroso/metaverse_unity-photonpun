@@ -198,7 +198,7 @@ namespace StarterAssets
 
         private void LateUpdate()
         {
-            if (_pv.IsMine) CameraRotation();
+            CameraRotation();
         }
 
         private void LockCursor()
