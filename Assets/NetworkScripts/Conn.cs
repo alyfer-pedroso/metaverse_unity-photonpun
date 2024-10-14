@@ -15,6 +15,7 @@ public class Conn : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _joinRoomBtn;
     [SerializeField] private TMP_InputField _nicknameInput, _roomnameInput;
     [SerializeField] private TMP_Text _currentNickname, _currentPlayers, _currentRoom;
+    public bool _isInTesting = false;
 
 
     [Header("Player")]
@@ -35,7 +36,7 @@ public class Conn : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        _loginPanel.SetActive(true);
+        _loginPanel.SetActive(!_isInTesting);
         _lobbyPanel.SetActive(false);
         _joinRoomBtn.SetActive(false);
         _roomPanel.SetActive(false);
@@ -44,6 +45,9 @@ public class Conn : MonoBehaviourPunCallbacks
             _spawnPoint = GameObject.FindWithTag(_spawnPointTag).transform;
 
         _defaultMessageColor = _chatInputField.textComponent.color;
+
+        if (_isInTesting)
+            SpawnPlayer();
     }
 
     public void Login()
@@ -100,6 +104,12 @@ public class Conn : MonoBehaviourPunCallbacks
 
     public void SpawnPlayer()
     {
+        if (_isInTesting)
+        {
+            Instantiate(_playerPrefab, _spawnPoint.position, Quaternion.identity);
+            return;
+        }
+
         PhotonNetwork.Instantiate(_playerPrefab.name, _spawnPoint.position, Quaternion.identity, 0);
     }
 

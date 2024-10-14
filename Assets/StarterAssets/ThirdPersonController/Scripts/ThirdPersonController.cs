@@ -113,7 +113,8 @@ namespace StarterAssets
         private CinemachineVirtualCamera _cinemachineVirtualCamera;
         [SerializeField] private TMP_Text _nickname;
         [SerializeField] private GameObject _myCanvas;
-        [SerializeField] private bool _cursorLocked = true;
+        // [SerializeField] private bool _cursorLocked = true;
+        [SerializeField] private Conn _conn;
 
         private const float _threshold = 0.01f;
 
@@ -154,13 +155,18 @@ namespace StarterAssets
             {
                 _myCanvas = GameObject.FindWithTag("my_canvas");
             }
+
+            if (_conn == null)
+            {
+                _conn = GameObject.FindWithTag("network_manager").GetComponent<Conn>();
+            }
         }
 
         private void Start()
         {
             _pv = GetComponent<PhotonView>();
 
-            if (_pv.IsMine)
+            if (_pv.IsMine || _conn._isInTesting)
             {
                 _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
@@ -172,7 +178,9 @@ namespace StarterAssets
                 _playerInput.enabled = true;
                 _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
                 _cinemachineVirtualCamera.Follow = transform.GetChild(0);
-                LockCursor();
+                // LockCursor();
+                // Cursor.lockState = CursorLockMode.Locked;
+                // Cursor.visible = false;
 
                 AssignAnimationIDs();
 
@@ -185,13 +193,14 @@ namespace StarterAssets
 
         private void Update()
         {
-            if (_pv.IsMine)
+            if (_pv.IsMine || _conn._isInTesting)
             {
                 _hasAnimator = TryGetComponent(out _animator);
                 JumpAndGravity();
                 GroundedCheck();
                 Move();
-                HandleCursor();
+                // _playerInput.enabled = !Cursor.visible;
+                // HandleCursor();
             }
             _myCanvas.transform.LookAt(Camera.main.transform);
         }
@@ -201,25 +210,23 @@ namespace StarterAssets
             CameraRotation();
         }
 
-        private void LockCursor()
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            _cursorLocked = true;
-        }
+        // private void LockCursor()
+        // {
+        //     Cursor.lockState = CursorLockMode.Locked;
+        //     Cursor.visible = false;
+        // }
 
-        private void UnlockCursor()
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            _cursorLocked = false;
-        }
+        // private void UnlockCursor()
+        // {
+        //     Cursor.lockState = CursorLockMode.None;
+        //     Cursor.visible = true;
+        // }
 
-        private void HandleCursor()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-                if (_cursorLocked) UnlockCursor(); else LockCursor();
-        }
+        // private void HandleCursor()
+        // {
+        //     if (Input.GetKeyDown(KeyCode.M))
+        //         if (_cursorLocked) UnlockCursor(); else LockCursor();
+        // }
 
         private void AssignAnimationIDs()
         {
@@ -247,7 +254,7 @@ namespace StarterAssets
 
         private void CameraRotation()
         {
-            if (!_cursorLocked) return;
+            // if (Cursor.visible) return;
 
             // if there is an input and camera position is not fixed
             if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
@@ -268,9 +275,10 @@ namespace StarterAssets
                 _cinemachineTargetYaw, 0.0f);
         }
 
+
         private void Move()
         {
-            if (!_cursorLocked) return;
+            // if (Cursor.visible) return;
 
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
@@ -340,7 +348,7 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
-            if (!_cursorLocked) return;
+            // if (Cursor.visible) _input.jump = false;
 
             if (Grounded)
             {
