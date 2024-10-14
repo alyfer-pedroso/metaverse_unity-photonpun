@@ -103,6 +103,7 @@
     <Compile Include="Assets\Photon\PhotonChat\Demos\Common\TextToggleIsOnTransition.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\FriendItem.cs" />
     <Compile Include="Assets\SKY city lite\Standard Assets\Utility\SimpleActivatorMenu.cs" />
+    <Compile Include="Assets\Scripts\VoidSystem.cs" />
     <Compile Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Scripts\CameraMotionBlur.cs" />
     <Compile Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Scripts\DepthOfFieldDeprecated.cs" />
     <Compile Include="Assets\SKY city lite\Standard Assets\Utility\ObjectResetter.cs" />
@@ -208,6 +209,7 @@
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAA3Console.shader" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionSelective.shader" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\RadialBlur.shader" />
+    <None Include="Assets\DeepSpaceSkyboxPack\GalaxyFire\Galaxy Fire Skybox Readme.txt" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\VignetteShader.shader" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\MotionBlurClear.shader" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
@@ -222,6 +224,7 @@
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\FisheyeShader.shader" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\DeepSpaceSkyboxPack\DiverseSpace\Diverse Space Skybox Readme.txt" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BrightPassFilter.shader" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
@@ -258,10 +261,12 @@
     <None Include="Assets\Photon\PhotonLibs\Metro\Photon3Unity3D.dll" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrainDX11.shader" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\SeparableWeightedBlurDof34.shader" />
+    <None Include="Assets\DeepSpaceSkyboxPack\GalacticGreen\Galactic Green Skybox Readme.txt" />
     <None Include="Assets\SKY city lite\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfFieldScatter.shader" />
+    <None Include="Assets\Free Skyboxes - Space\Readme.txt" />
     <None Include="Assets\SKY city lite\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Shaders\EdgeDetectNormals.shader" />

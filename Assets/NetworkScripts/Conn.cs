@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using UnityEditor.UIElements;
 
 public class Conn : MonoBehaviourPunCallbacks
 {
@@ -15,12 +16,18 @@ public class Conn : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_InputField _nicknameInput, _roomnameInput;
     [SerializeField] private TMP_Text _currentNickname, _currentPlayers, _currentRoom;
 
+
     [Header("Player")]
     [SerializeField] private GameObject _playerPrefab;
 
     [Header("Chat Configuration")]
     [SerializeField] private TMP_InputField _chatInputField;
     [SerializeField] private TMP_Text _chatDisplay;
+    private Color _defaultMessageColor;
+
+    [Header("Spawn Configuration")]
+    [SerializeField] private string _spawnPointTag;
+    public Transform _spawnPoint;
 
     private readonly List<string> chatMessages = new();
 
@@ -32,6 +39,11 @@ public class Conn : MonoBehaviourPunCallbacks
         _lobbyPanel.SetActive(false);
         _joinRoomBtn.SetActive(false);
         _roomPanel.SetActive(false);
+
+        if (_spawnPoint == null)
+            _spawnPoint = GameObject.FindWithTag(_spawnPointTag).transform;
+
+        _defaultMessageColor = _chatInputField.textComponent.color;
     }
 
     public void Login()
@@ -57,6 +69,7 @@ public class Conn : MonoBehaviourPunCallbacks
     {
         if (_chatInputField != null && !string.IsNullOrEmpty(_chatInputField.text))
         {
+            _chatInputField.textComponent.color = _defaultMessageColor;
             SendMessageToChat($"{PhotonNetwork.NickName}: {_chatInputField.text}");
         }
     }
@@ -83,6 +96,11 @@ public class Conn : MonoBehaviourPunCallbacks
     public void UpdateRoomData()
     {
         _currentPlayers.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
+    }
+
+    public void SpawnPlayer()
+    {
+        PhotonNetwork.Instantiate(_playerPrefab.name, _spawnPoint.position, Quaternion.identity, 0);
     }
 
     public override void OnConnectedToMaster()
@@ -122,18 +140,20 @@ public class Conn : MonoBehaviourPunCallbacks
         _lobbyPanel.SetActive(false);
         _roomPanel.SetActive(true);
 
-        PhotonNetwork.Instantiate(_playerPrefab.name, new Vector3(0, 0, Random.Range(1, 8)), Quaternion.identity, 0);
+        SpawnPlayer();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         UpdateRoomData();
+        _chatInputField.textComponent.color = Color.yellow;
         SendMessageToChat($"{newPlayer.NickName} joined the room");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         UpdateRoomData();
+        _chatInputField.textComponent.color = Color.red;
         SendMessageToChat($"{otherPlayer.NickName} left the room");
     }
 }

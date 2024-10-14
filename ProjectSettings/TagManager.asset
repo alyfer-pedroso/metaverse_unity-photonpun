@@ -7,11 +7,14 @@ TagManager:
   - CinemachineTarget
   - nickname
   - my_canvas
+  - Bullet
+  - spawnpoint
+  - network_manager
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - 
