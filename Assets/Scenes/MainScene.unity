@@ -2393,7 +2393,11 @@ MonoBehaviour:
   _currentPlayers: {fileID: 869175523}
   _currentRoom: {fileID: 1180005555}
 <<<<<<< HEAD
+<<<<<<< HEAD
   _isInTesting: 0
+=======
+  _isInTesting: 1
+>>>>>>> dba6a1fd84922a717f98420853f6175825b43c26
 =======
   _isInTesting: 1
 >>>>>>> dba6a1fd84922a717f98420853f6175825b43c26
