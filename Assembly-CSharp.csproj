@@ -97,6 +97,7 @@
     <Compile Include="Assets\SKY city lite\Standard Assets\Characters\FirstPersonCharacter\Scripts\RigidbodyFirstPersonController.cs" />
     <Compile Include="Assets\SKY city lite\Standard Assets\Characters\FirstPersonCharacter\Scripts\MouseLook.cs" />
     <Compile Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Scripts\NoiseAndGrain.cs" />
+    <Compile Include="Assets\NetworkScripts\NetworkManager.cs" />
     <Compile Include="Assets\SKY city lite\Standard Assets\Utility\LerpControlledBob.cs" />
     <Compile Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Scripts\Vortex.cs" />
     <Compile Include="Assets\SKY city lite\Standard Assets\Effects\ImageEffects\Scripts\Grayscale.cs" />
