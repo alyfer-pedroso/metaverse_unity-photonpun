@@ -44,7 +44,7 @@ public class Conn : MonoBehaviourPunCallbacks
         if (_spawnPoint == null)
             _spawnPoint = GameObject.FindWithTag(_spawnPointTag).transform;
 
-        _defaultMessageColor = _chatInputField.textComponent.color;
+        _defaultMessageColor = _currentPlayers.color;
 
         if (_isInTesting)
             SpawnPlayer();
@@ -73,7 +73,7 @@ public class Conn : MonoBehaviourPunCallbacks
     {
         if (_chatInputField != null && !string.IsNullOrEmpty(_chatInputField.text))
         {
-            _chatInputField.textComponent.color = _defaultMessageColor;
+            _currentPlayers.color = _defaultMessageColor;
             SendMessageToChat($"{PhotonNetwork.NickName}: {_chatInputField.text}");
         }
     }
@@ -150,20 +150,30 @@ public class Conn : MonoBehaviourPunCallbacks
         _lobbyPanel.SetActive(false);
         _roomPanel.SetActive(true);
 
+        UpdateRoomData();
         SpawnPlayer();
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
+            SendMessageToChat($"Server: {PhotonNetwork.NickName} joined the room");
+    }
+
+    public override void OnLeftRoom()
+    {
+        UpdateRoomData();
+        SendMessageToChat($"Server: {PhotonNetwork.NickName} left the room");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         UpdateRoomData();
-        _chatInputField.textComponent.color = Color.yellow;
-        SendMessageToChat($"{newPlayer.NickName} joined the room");
+        if (PhotonNetwork.IsMasterClient)
+            SendMessageToChat($"Server: {newPlayer.NickName} joined the room");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         UpdateRoomData();
-        _chatInputField.textComponent.color = Color.red;
-        SendMessageToChat($"{otherPlayer.NickName} left the room");
+        if (PhotonNetwork.IsMasterClient)
+            SendMessageToChat($"Server: {otherPlayer.NickName} left the room");
     }
 }
