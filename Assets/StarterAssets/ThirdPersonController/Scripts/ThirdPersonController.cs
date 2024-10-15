@@ -113,7 +113,7 @@ namespace StarterAssets
         private CinemachineVirtualCamera _cinemachineVirtualCamera;
         [SerializeField] private TMP_Text _nickname;
         [SerializeField] private GameObject _myCanvas;
-        // [SerializeField] private bool _cursorLocked = true;
+        [SerializeField] private bool _cursorLocked = true;
         [SerializeField] private Conn _conn;
 
         private const float _threshold = 0.01f;
@@ -178,9 +178,7 @@ namespace StarterAssets
                 _playerInput.enabled = true;
                 _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
                 _cinemachineVirtualCamera.Follow = transform.GetChild(0);
-                // LockCursor();
-                // Cursor.lockState = CursorLockMode.Locked;
-                // Cursor.visible = false;
+                LockCursor();
 
                 AssignAnimationIDs();
 
@@ -188,7 +186,7 @@ namespace StarterAssets
                 _jumpTimeoutDelta = JumpTimeout;
                 _fallTimeoutDelta = FallTimeout;
             }
-            _nickname.text = _pv.Owner.NickName;
+            _nickname.text = _conn._isInTesting ? "Testing Player" : _pv.Owner.NickName;
         }
 
         private void Update()
@@ -199,8 +197,8 @@ namespace StarterAssets
                 JumpAndGravity();
                 GroundedCheck();
                 Move();
-                // _playerInput.enabled = !Cursor.visible;
-                // HandleCursor();
+                _playerInput.enabled = _cursorLocked;
+                HandleCursor();
             }
             _myCanvas.transform.LookAt(Camera.main.transform);
         }
@@ -210,23 +208,25 @@ namespace StarterAssets
             CameraRotation();
         }
 
-        // private void LockCursor()
-        // {
-        //     Cursor.lockState = CursorLockMode.Locked;
-        //     Cursor.visible = false;
-        // }
+        private void LockCursor()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            _cursorLocked = true;
+        }
 
-        // private void UnlockCursor()
-        // {
-        //     Cursor.lockState = CursorLockMode.None;
-        //     Cursor.visible = true;
-        // }
+        private void UnlockCursor()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            _cursorLocked = false;
+        }
 
-        // private void HandleCursor()
-        // {
-        //     if (Input.GetKeyDown(KeyCode.M))
-        //         if (_cursorLocked) UnlockCursor(); else LockCursor();
-        // }
+        private void HandleCursor()
+        {
+            if (Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.Escape))
+                if (_cursorLocked) UnlockCursor(); else LockCursor();
+        }
 
         private void AssignAnimationIDs()
         {
@@ -254,7 +254,7 @@ namespace StarterAssets
 
         private void CameraRotation()
         {
-            // if (Cursor.visible) return;
+            if (!_cursorLocked) return;
 
             // if there is an input and camera position is not fixed
             if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)

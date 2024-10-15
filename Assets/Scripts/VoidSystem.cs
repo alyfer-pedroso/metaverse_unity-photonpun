@@ -14,11 +14,7 @@ public class VoidSystem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Triggered 1");
         if (other.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("Triggered 2");
             other.gameObject.transform.position = _conn._spawnPoint.position;
-        }
     }
 }
