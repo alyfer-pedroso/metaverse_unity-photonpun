@@ -4,17 +4,15 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using Unity.VisualScripting;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    [Header("System Configuration")]
-    // [SerializeField] private GameObject _loginPanel;
-    // [SerializeField] private GameObject _lobbyPanel;
-    // [SerializeField] private GameObject _roomPanel;
-    [SerializeField] private GameObject _joinRoomBtn;
-    [SerializeField] private TMP_InputField _nicknameInput, _roomnameInput;
+    [Header("Menu Configuration")]
+    [SerializeField] private GameObject _roomField;
+    [SerializeField] private GameObject _nicknameField;
+    [SerializeField] private GameObject _createRoomBtn, _joinRoomBtn;
     [SerializeField] private TMP_Text _currentNickname, _currentPlayers, _currentRoom;
-    public bool _isInTesting = false;
 
 
     [Header("Player")]
@@ -24,21 +22,25 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_InputField _chatInputField;
     [SerializeField] private TMP_Text _chatDisplay;
     private Color _defaultMessageColor;
+    private readonly List<string> chatMessages = new();
+
 
     [Header("Spawn Configuration")]
     [SerializeField] private string _spawnPointTag;
     public Transform _spawnPoint;
 
-    private readonly List<string> chatMessages = new();
+    [Header("Testing")]
+    public bool _isInTesting = false;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        // _loginPanel.SetActive(!_isInTesting);
-        // _lobbyPanel.SetActive(false);
-        // _joinRoomBtn.SetActive(false);
-        // _roomPanel.SetActive(false);
+        _createRoomBtn.SetActive(false);
+        _joinRoomBtn.SetActive(false);
+        _roomField.SetActive(false);
+        _nicknameField.SetActive(false);
 
         if (_spawnPoint == null)
             _spawnPoint = GameObject.FindWithTag(_spawnPointTag).transform;
@@ -49,9 +51,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             SpawnPlayer();
     }
 
+    public void HandleCreateRoom()
+    {
+        _roomField.SetActive(!_roomField.activeInHierarchy);
+        _createRoomBtn.SetActive(!_createRoomBtn.activeInHierarchy);
+    }
+
     public void Login()
     {
-        PhotonNetwork.NickName = _nicknameInput.text;
+        PhotonNetwork.NickName = _nicknameField.GetComponent<TMP_InputField>().text;
         PhotonNetwork.ConnectUsingSettings();
         // _loginPanel.SetActive(false);
         // _lobbyPanel.SetActive(true);
@@ -59,7 +67,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        PhotonNetwork.JoinOrCreateRoom(_roomnameInput.text, new RoomOptions(), TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom(_roomField.GetComponent<TMP_InputField>().text, new RoomOptions(), TypedLobby.Default);
     }
 
 
@@ -122,7 +130,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined lobby!!");
+        _createRoomBtn.SetActive(true);
         _joinRoomBtn.SetActive(true);
+        _nicknameField.SetActive(true);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
