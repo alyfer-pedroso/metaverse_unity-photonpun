@@ -129,7 +129,7 @@ namespace SlimUI.ModernMenu
 			exitMenu.SetActive(false);
 			if (extrasMenu) extrasMenu.SetActive(false);
 			playMenu.SetActive(true);
-			_networkManager.Login();
+			_networkManager.HandlePlay();
 		}
 
 		public void PlayCampaignMobile()

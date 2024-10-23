@@ -42,10 +42,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         _roomField.SetActive(false);
         _nicknameField.SetActive(false);
 
-        if (_spawnPoint == null)
-            _spawnPoint = GameObject.FindWithTag(_spawnPointTag).transform;
+        // if (_spawnPoint == null)
+        //     _spawnPoint = GameObject.FindWithTag(_spawnPointTag).transform;
 
-        _defaultMessageColor = _currentPlayers.color;
+        // _defaultMessageColor = _currentPlayers.color;
 
         if (_isInTesting)
             SpawnPlayer();
@@ -55,6 +55,19 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         _roomField.SetActive(!_roomField.activeInHierarchy);
         _createRoomBtn.SetActive(!_createRoomBtn.activeInHierarchy);
+    }
+
+    public void HandlePlay()
+    {
+        _createRoomBtn.SetActive(!_createRoomBtn.activeInHierarchy);
+        _joinRoomBtn.SetActive(!_joinRoomBtn.activeInHierarchy);
+        _nicknameField.SetActive(!_nicknameField.activeInHierarchy);
+    }
+
+    public void Join()
+    {
+        if (_nicknameField.GetComponent<TMP_InputField>().text.Trim() != "")
+            Login();
     }
 
     public void Login()
@@ -67,7 +80,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        PhotonNetwork.JoinOrCreateRoom(_roomField.GetComponent<TMP_InputField>().text, new RoomOptions(), TypedLobby.Default);
+        if (_roomField.GetComponent<TMP_InputField>().text.Trim() != "")
+            PhotonNetwork.JoinOrCreateRoom(_roomField.GetComponent<TMP_InputField>().text, new RoomOptions(), TypedLobby.Default);
     }
 
 
@@ -122,17 +136,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Connected!!");
         PhotonNetwork.JoinLobby();
     }
 
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("Joined lobby!!");
-        _createRoomBtn.SetActive(true);
-        _joinRoomBtn.SetActive(true);
-        _nicknameField.SetActive(true);
+        if (_roomField.activeInHierarchy)
+        {
+            CreateRoom();
+            return;
+        }
+        // _createRoomBtn.SetActive(true);
+        // _joinRoomBtn.SetActive(true);
+        // _nicknameField.SetActive(true);
+        Debug.Log("OnJoinedLobby");
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -152,18 +170,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         print($"Room name: {PhotonNetwork.CurrentRoom.Name}");
         print($"Players connected: {PhotonNetwork.CurrentRoom.PlayerCount}");
 
-        _currentNickname.text = PhotonNetwork.NickName;
-        _currentPlayers.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
-        _currentRoom.text = PhotonNetwork.CurrentRoom.Name;
+        // _currentNickname.text = PhotonNetwork.NickName;
+        // _currentPlayers.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
+        // _currentRoom.text = PhotonNetwork.CurrentRoom.Name;
 
-        // _lobbyPanel.SetActive(false);
-        // _roomPanel.SetActive(true);
+        // // _lobbyPanel.SetActive(false);
+        // // _roomPanel.SetActive(true);
 
-        UpdateRoomData();
-        SpawnPlayer();
+        // UpdateRoomData();
+        // SpawnPlayer();
 
-        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
-            SendMessageToChat($"Server: {PhotonNetwork.NickName} joined the room");
+        // if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
+        //     SendMessageToChat($"Server: {PhotonNetwork.NickName} joined the room");
     }
 
     public override void OnLeftRoom()
