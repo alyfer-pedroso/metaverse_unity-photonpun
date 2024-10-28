@@ -108,13 +108,14 @@ namespace StarterAssets
         private Animator _animator;
         private CharacterController _controller;
         private StarterAssetsInputs _input;
-        private GameObject _mainCamera;
+        [SerializeField] private GameObject _mainCamera;
         private PhotonView _pv;
-        private CinemachineVirtualCamera _cinemachineVirtualCamera;
+        [SerializeField] private CinemachineVirtualCamera _cinemachineVirtualCamera;
         [SerializeField] private TMP_Text _nickname;
         [SerializeField] private GameObject _myCanvas;
         [SerializeField] private bool _cursorLocked = true;
-        [SerializeField] private Conn _conn;
+        [SerializeField] private NetworkManager _networkManager;
+        // [SerializeField] private Conn _networkManager;
 
         private const float _threshold = 0.01f;
 
@@ -135,15 +136,21 @@ namespace StarterAssets
 
         private void Awake()
         {
+            _pv = GetComponent<PhotonView>();
+
             // get a reference to our main camera
             if (_mainCamera == null)
             {
-                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+                var cam = GameObject.FindGameObjectWithTag("MainCamera");
+                if (cam.GetComponent<PhotonView>().IsMine)
+                    _mainCamera = cam;
             }
 
             if (_cinemachineVirtualCamera == null)
             {
-                _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
+                CinemachineVirtualCamera cinemachine = FindObjectOfType<CinemachineVirtualCamera>();
+                if (cinemachine.GetComponent<PhotonView>().IsMine)
+                    _cinemachineVirtualCamera = cinemachine;
             }
 
             if (_nickname == null)
@@ -156,17 +163,17 @@ namespace StarterAssets
                 _myCanvas = GameObject.FindWithTag("my_canvas");
             }
 
-            if (_conn == null)
+            if (_networkManager == null)
             {
-                _conn = GameObject.FindWithTag("network_manager").GetComponent<Conn>();
+                _networkManager = GameObject.FindWithTag("network_manager").GetComponent<NetworkManager>();
+                // _networkManager = GameObject.FindWithTag("network_manager").GetComponent<Conn>();
             }
         }
 
         private void Start()
         {
-            _pv = GetComponent<PhotonView>();
 
-            if (_pv.IsMine || _conn._isInTesting)
+            if (_pv.IsMine || _networkManager._isInTesting)
             {
                 _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
@@ -186,12 +193,12 @@ namespace StarterAssets
                 _jumpTimeoutDelta = JumpTimeout;
                 _fallTimeoutDelta = FallTimeout;
             }
-            _nickname.text = _conn._isInTesting ? "Testing Player" : _pv.Owner.NickName;
+            _nickname.text = _networkManager._isInTesting ? "Testing Player" : _pv.Owner.NickName;
         }
 
         private void Update()
         {
-            if (_pv.IsMine || _conn._isInTesting)
+            if (_pv.IsMine || _networkManager._isInTesting)
             {
                 _hasAnimator = TryGetComponent(out _animator);
                 JumpAndGravity();
@@ -225,7 +232,7 @@ namespace StarterAssets
         private void HandleCursor()
         {
             if (Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.Escape))
-                if (_cursorLocked) UnlockCursor(); else LockCursor();
+                if (_cursorLocked) UnlockCursor(); else if (!_cursorLocked && string.IsNullOrEmpty(_networkManager._chatInputField.text)) LockCursor();
         }
 
         private void AssignAnimationIDs()

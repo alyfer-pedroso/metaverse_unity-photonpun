@@ -13,6 +13,7 @@ public class Conn : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _lobbyPanel;
     [SerializeField] private GameObject _roomPanel;
     [SerializeField] private GameObject _joinRoomBtn;
+    [SerializeField] private GameObject _cameraUI;
     [SerializeField] private TMP_InputField _nicknameInput, _roomnameInput;
     [SerializeField] private TMP_Text _currentNickname, _currentPlayers, _currentRoom;
     public bool _isInTesting = false;
@@ -22,7 +23,7 @@ public class Conn : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _playerPrefab;
 
     [Header("Chat Configuration")]
-    [SerializeField] private TMP_InputField _chatInputField;
+    public TMP_InputField _chatInputField;
     [SerializeField] private TMP_Text _chatDisplay;
     private Color _defaultMessageColor;
 
@@ -40,11 +41,12 @@ public class Conn : MonoBehaviourPunCallbacks
         _lobbyPanel.SetActive(false);
         _joinRoomBtn.SetActive(false);
         _roomPanel.SetActive(false);
+        _cameraUI.SetActive(true);
 
         if (_spawnPoint == null)
             _spawnPoint = GameObject.FindWithTag(_spawnPointTag).transform;
 
-        _defaultMessageColor = _currentPlayers.color;
+        _defaultMessageColor = _chatInputField.textComponent.color;
 
         if (_isInTesting)
             SpawnPlayer();
@@ -73,7 +75,7 @@ public class Conn : MonoBehaviourPunCallbacks
     {
         if (_chatInputField != null && !string.IsNullOrEmpty(_chatInputField.text))
         {
-            _currentPlayers.color = _defaultMessageColor;
+            _chatInputField.textComponent.color = _defaultMessageColor;
             SendMessageToChat($"{PhotonNetwork.NickName}: {_chatInputField.text}");
         }
     }
@@ -149,31 +151,22 @@ public class Conn : MonoBehaviourPunCallbacks
 
         _lobbyPanel.SetActive(false);
         _roomPanel.SetActive(true);
+        _cameraUI.SetActive(false);
 
-        UpdateRoomData();
         SpawnPlayer();
-
-        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
-            SendMessageToChat($"Server: {PhotonNetwork.NickName} joined the room");
-    }
-
-    public override void OnLeftRoom()
-    {
-        UpdateRoomData();
-        SendMessageToChat($"Server: {PhotonNetwork.NickName} left the room");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         UpdateRoomData();
-        if (PhotonNetwork.IsMasterClient)
-            SendMessageToChat($"Server: {newPlayer.NickName} joined the room");
+        _chatInputField.textComponent.color = Color.yellow;
+        SendMessageToChat($"{newPlayer.NickName} joined the room");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         UpdateRoomData();
-        if (PhotonNetwork.IsMasterClient)
-            SendMessageToChat($"Server: {otherPlayer.NickName} left the room");
+        _chatInputField.textComponent.color = Color.red;
+        SendMessageToChat($"{otherPlayer.NickName} left the room");
     }
 }

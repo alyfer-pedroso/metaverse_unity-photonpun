@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4026269054850401801
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3239355997145869245}
+  - component: {fileID: 6975361045697136183}
+  - component: {fileID: 8646669828471592827}
+  - component: {fileID: 8364465299138798883}
+  m_Layer: 0
+  m_Name: PRODNetworkManager
+  m_TagString: network_manager
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3239355997145869245
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026269054850401801}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.5, y: 0, z: 6.42}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6975361045697136183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026269054850401801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e5c779f446c99e4fbaa7b9c9e660ce4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pv: {fileID: 0}
+  _roomField: {fileID: 0}
+  _nicknameField: {fileID: 0}
+  _menuCanvas: {fileID: 0}
+  _mainCanvas: {fileID: 0}
+  _loadingPanel: {fileID: 0}
+  _createRoomBtn: {fileID: 0}
+  _joinRoomBtn: {fileID: 0}
+  _roomPanel: {fileID: 0}
+  _currentNickname: {fileID: 0}
+  _currentPlayers: {fileID: 0}
+  _currentRoom: {fileID: 0}
+  _uiCamera: {fileID: 0}
+  _eventSystem: {fileID: 0}
+  _playerPrefab: {fileID: 4744674819672016530, guid: 12ff3704cc715134596ff2ba5ad79028, type: 3}
+  _mainCamera: {fileID: 8944336655422409498, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
+  _playerFollowCamera: {fileID: 2070925441746177671, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
+  _chatInputField: {fileID: 0}
+  _chatDisplay: {fileID: 0}
+  _spawnPointTag: spawnpoint
+  _spawnPoint: {fileID: 0}
+  _isInTesting: 0
+--- !u!114 &8646669828471592827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026269054850401801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddfa1edf165b2c448960d3140d9243e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _loadingBar: {fileID: 0}
+--- !u!114 &8364465299138798883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026269054850401801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
