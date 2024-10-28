@@ -114,8 +114,8 @@ namespace StarterAssets
         [SerializeField] private TMP_Text _nickname;
         [SerializeField] private GameObject _myCanvas;
         [SerializeField] private bool _cursorLocked = true;
-        [SerializeField] private NetworkManager _networkManager;
-        // [SerializeField] private Conn _networkManager;
+        // [SerializeField] private NetworkManager _networkManager;
+        [SerializeField] private Conn _networkManager;
 
         private const float _threshold = 0.01f;
 
@@ -128,7 +128,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
                 return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
-				return false;
+                return false;
 #endif
             }
         }
@@ -141,16 +141,18 @@ namespace StarterAssets
             // get a reference to our main camera
             if (_mainCamera == null)
             {
-                var cam = GameObject.FindGameObjectWithTag("MainCamera");
-                if (cam.GetComponent<PhotonView>().IsMine)
-                    _mainCamera = cam;
+                // var cam = GameObject.FindGameObjectWithTag("MainCamera");
+                // if (cam.GetComponent<PhotonView>().IsMine)
+                //     _mainCamera = cam;
+                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
 
             if (_cinemachineVirtualCamera == null)
             {
-                CinemachineVirtualCamera cinemachine = FindObjectOfType<CinemachineVirtualCamera>();
-                if (cinemachine.GetComponent<PhotonView>().IsMine)
-                    _cinemachineVirtualCamera = cinemachine;
+                // CinemachineVirtualCamera cinemachine = FindObjectOfType<CinemachineVirtualCamera>();
+                // if (cinemachine.GetComponent<PhotonView>().IsMine)
+                //     _cinemachineVirtualCamera = cinemachine;
+                _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
             }
 
             if (_nickname == null)
@@ -165,8 +167,8 @@ namespace StarterAssets
 
             if (_networkManager == null)
             {
-                _networkManager = GameObject.FindWithTag("network_manager").GetComponent<NetworkManager>();
-                // _networkManager = GameObject.FindWithTag("network_manager").GetComponent<Conn>();
+                // _networkManager = GameObject.FindWithTag("network_manager").GetComponent<NetworkManager>();
+                _networkManager = GameObject.FindWithTag("network_manager").GetComponent<Conn>();
             }
         }
 
