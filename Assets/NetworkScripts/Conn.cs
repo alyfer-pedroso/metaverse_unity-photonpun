@@ -10,9 +10,10 @@ public class Conn : MonoBehaviourPunCallbacks
 {
     [Header("System Configuration")]
     [SerializeField] private GameObject _loginPanel;
+    [SerializeField] private GameObject _colorPanel;
     [SerializeField] private GameObject _lobbyPanel;
     [SerializeField] private GameObject _roomPanel;
-    [SerializeField] private GameObject _joinRoomBtn;
+    [SerializeField] private GameObject _colorBtn;
     [SerializeField] private GameObject _cameraUI;
     [SerializeField] private TMP_InputField _nicknameInput, _roomnameInput;
     [SerializeField] private TMP_Text _currentNickname, _currentPlayers, _currentRoom;
@@ -21,6 +22,7 @@ public class Conn : MonoBehaviourPunCallbacks
 
     [Header("Player")]
     [SerializeField] private GameObject _playerPrefab;
+    public CUIColorPicker _colorPicker;
 
     [Header("Chat Configuration")]
     public TMP_InputField _chatInputField;
@@ -38,8 +40,9 @@ public class Conn : MonoBehaviourPunCallbacks
     void Start()
     {
         _loginPanel.SetActive(!_isInTesting);
+        _colorPanel.SetActive(false);
         _lobbyPanel.SetActive(false);
-        _joinRoomBtn.SetActive(false);
+        _colorBtn.SetActive(false);
         _roomPanel.SetActive(false);
         _cameraUI.SetActive(true);
 
@@ -47,6 +50,9 @@ public class Conn : MonoBehaviourPunCallbacks
             _spawnPoint = GameObject.FindWithTag(_spawnPointTag).transform;
 
         _defaultMessageColor = _chatInputField.textComponent.color;
+
+        // if (_colorPicker == null)
+        //     _colorPicker = FindObjectOfType<CUIColorPicker>().GetComponent<CUIColorPicker>();
 
         if (_isInTesting)
             SpawnPlayer();
@@ -57,7 +63,7 @@ public class Conn : MonoBehaviourPunCallbacks
         PhotonNetwork.NickName = _nicknameInput.text;
         PhotonNetwork.ConnectUsingSettings();
         _loginPanel.SetActive(false);
-        _lobbyPanel.SetActive(true);
+        _colorPanel.SetActive(true);
     }
 
     public void CreateRoom()
@@ -75,7 +81,7 @@ public class Conn : MonoBehaviourPunCallbacks
     {
         if (_chatInputField != null && !string.IsNullOrEmpty(_chatInputField.text))
         {
-            _chatInputField.textComponent.color = _defaultMessageColor;
+            // _chatInputField.textComponent.color = _defaultMessageColor;
             SendMessageToChat($"{PhotonNetwork.NickName}: {_chatInputField.text}");
         }
     }
@@ -115,6 +121,12 @@ public class Conn : MonoBehaviourPunCallbacks
         PhotonNetwork.Instantiate(_playerPrefab.name, _spawnPoint.position, Quaternion.identity, 0);
     }
 
+    public void ToRoomPanel()
+    {
+        _colorPanel.SetActive(false);
+        _lobbyPanel.SetActive(true);
+    }
+
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected!!");
@@ -125,7 +137,7 @@ public class Conn : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined lobby!!");
-        _joinRoomBtn.SetActive(true);
+        _colorBtn.SetActive(true);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -159,14 +171,14 @@ public class Conn : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         UpdateRoomData();
-        _chatInputField.textComponent.color = Color.yellow;
+        // _chatInputField.textComponent.color = Color.yellow;
         SendMessageToChat($"{newPlayer.NickName} joined the room");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         UpdateRoomData();
-        _chatInputField.textComponent.color = Color.red;
+        // _chatInputField.textComponent.color = Color.red;
         SendMessageToChat($"{otherPlayer.NickName} left the room");
     }
 }

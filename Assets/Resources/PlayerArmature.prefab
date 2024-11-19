@@ -1265,6 +1265,7 @@ MonoBehaviour:
   _myCanvas: {fileID: 3579875426490583578}
   _cursorLocked: 1
   _networkManager: {fileID: 0}
+  _playerMaterialScript: {fileID: 4539447763795168649}
 --- !u!114 &5885216827943657505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1416,7 +1417,7 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 0
+  observableSearch: 2
   ObservedComponents:
   - {fileID: -6825002499829602339}
   - {fileID: -6112197039938502709}
@@ -2544,6 +2545,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6392546784736076633}
   - component: {fileID: 5597113867290821413}
+  - component: {fileID: 4539447763795168649}
   m_Layer: 0
   m_Name: Armature_Mesh
   m_TagString: Untagged
@@ -2689,6 +2691,18 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.000000029802322, y: -0.09214255, z: 0.026248664}
     m_Extent: {x: 0.52818465, y: 0.88092995, z: 0.22050178}
   m_DirtyAABB: 0
+--- !u!114 &4539447763795168649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8187455079231382173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55f8c72fed6293479276da3d97bc39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8338988566280778634
 GameObject:
   m_ObjectHideFlags: 0

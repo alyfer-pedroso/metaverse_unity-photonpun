@@ -111,11 +111,15 @@ namespace StarterAssets
         [SerializeField] private GameObject _mainCamera;
         private PhotonView _pv;
         [SerializeField] private CinemachineVirtualCamera _cinemachineVirtualCamera;
+
+        [Header("Others")]
         [SerializeField] private TMP_Text _nickname;
         [SerializeField] private GameObject _myCanvas;
         [SerializeField] private bool _cursorLocked = true;
         // [SerializeField] private NetworkManager _networkManager;
         [SerializeField] private Conn _networkManager;
+        [SerializeField] private PlayerMaterialColor _playerMaterialScript;
+        [SerializeField] private Color _playerColor;
 
         private const float _threshold = 0.01f;
 
@@ -165,6 +169,11 @@ namespace StarterAssets
                 _myCanvas = GameObject.FindWithTag("my_canvas");
             }
 
+            if (_playerMaterialScript == null)
+            {
+                _playerMaterialScript = GameObject.Find("Armature_Mesh").GetComponent<PlayerMaterialColor>() ?? GetComponentInChildren<PlayerMaterialColor>();
+            }
+
             if (_networkManager == null)
             {
                 // _networkManager = GameObject.FindWithTag("network_manager").GetComponent<NetworkManager>();
@@ -191,6 +200,11 @@ namespace StarterAssets
 
                 AssignAnimationIDs();
 
+                _playerColor = _networkManager._colorPicker.Color;
+                _playerMaterialScript.SetPlayerColors(_playerColor);
+
+                _pv.RPC("RPC_SetPlayerColor", RpcTarget.AllBuffered, _playerColor.r, _playerColor.g, _playerColor.b, _playerColor.a);
+
                 // reset our timeouts on start
                 _jumpTimeoutDelta = JumpTimeout;
                 _fallTimeoutDelta = FallTimeout;
@@ -214,7 +228,8 @@ namespace StarterAssets
 
         private void LateUpdate()
         {
-            CameraRotation();
+            if (_pv.IsMine || _networkManager._isInTesting)
+                CameraRotation();
         }
 
         private void LockCursor()
@@ -235,6 +250,16 @@ namespace StarterAssets
         {
             if (Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.Escape))
                 if (_cursorLocked) UnlockCursor(); else if (!_cursorLocked && string.IsNullOrEmpty(_networkManager._chatInputField.text)) LockCursor();
+
+            if (Input.GetKeyDown(KeyCode.Mouse0) && !_cursorLocked)
+                LockCursor();
+        }
+
+        [PunRPC]
+        private void RPC_SetPlayerColor(float r, float g, float b, float a)
+        {
+            _playerColor = new Color(r, g, b, a);
+            _playerMaterialScript.SetPlayerColors(_playerColor);
         }
 
         private void AssignAnimationIDs()
