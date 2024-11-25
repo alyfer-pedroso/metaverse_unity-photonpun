@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "metaverse_unity-photonpun.sln"
+    "dotnet.defaultSolution": "metaverse_unity-photonpun-test.sln"
 }
