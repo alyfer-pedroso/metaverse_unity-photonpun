@@ -17,12 +17,13 @@ public class Conn : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _cameraUI;
     [SerializeField] private TMP_InputField _nicknameInput, _roomnameInput;
     [SerializeField] private TMP_Text _currentNickname, _currentPlayers, _currentRoom;
-    public bool _isInTesting = false;
+    public bool _isLocal = false;
 
 
     [Header("Player")]
     [SerializeField] private GameObject _playerPrefab;
     public CUIColorPicker _colorPicker;
+    public string _localPlayerNickname = "";
 
     [Header("Chat Configuration")]
     public TMP_InputField _chatInputField;
@@ -39,7 +40,7 @@ public class Conn : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        _loginPanel.SetActive(!_isInTesting);
+        _loginPanel.SetActive(true);
         _colorPanel.SetActive(false);
         _lobbyPanel.SetActive(false);
         _colorBtn.SetActive(false);
@@ -53,22 +54,29 @@ public class Conn : MonoBehaviourPunCallbacks
 
         // if (_colorPicker == null)
         //     _colorPicker = FindObjectOfType<CUIColorPicker>().GetComponent<CUIColorPicker>();
-
-        if (_isInTesting)
-            SpawnPlayer();
     }
 
     public void Login()
     {
-        PhotonNetwork.NickName = _nicknameInput.text;
-        PhotonNetwork.ConnectUsingSettings();
+        if (!_isLocal)
+        {
+            PhotonNetwork.NickName = _nicknameInput.text;
+            PhotonNetwork.ConnectUsingSettings();
+        }
+        _localPlayerNickname = _nicknameInput.text;
         _loginPanel.SetActive(false);
         _colorPanel.SetActive(true);
+        _colorBtn.SetActive(_isLocal);
     }
 
     public void CreateRoom()
     {
-        PhotonNetwork.JoinOrCreateRoom(_roomnameInput.text, new RoomOptions(), TypedLobby.Default);
+        if (!_isLocal)
+        {
+            PhotonNetwork.JoinOrCreateRoom(_roomnameInput.text, new RoomOptions(), TypedLobby.Default);
+            return;
+        }
+        PlayerToWorld();
     }
 
 
@@ -112,7 +120,7 @@ public class Conn : MonoBehaviourPunCallbacks
 
     public void SpawnPlayer()
     {
-        if (_isInTesting)
+        if (_isLocal)
         {
             Instantiate(_playerPrefab, _spawnPoint.position, Quaternion.identity);
             return;
@@ -125,6 +133,26 @@ public class Conn : MonoBehaviourPunCallbacks
     {
         _colorPanel.SetActive(false);
         _lobbyPanel.SetActive(true);
+    }
+
+    public void PlayerToWorld()
+    {
+        if (!_isLocal)
+        {
+            Debug.Log("Joined room!!");
+            print($"Room name: {PhotonNetwork.CurrentRoom.Name}");
+            print($"Players connected: {PhotonNetwork.CurrentRoom.PlayerCount}");
+
+            _currentNickname.text = PhotonNetwork.NickName;
+            _currentPlayers.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
+            _currentRoom.text = PhotonNetwork.CurrentRoom.Name;
+            _roomPanel.SetActive(true);
+        }
+
+        _lobbyPanel.SetActive(false);
+        _cameraUI.SetActive(false);
+
+        SpawnPlayer();
     }
 
     public override void OnConnectedToMaster()
@@ -153,19 +181,7 @@ public class Conn : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Joined room!!");
-        print($"Room name: {PhotonNetwork.CurrentRoom.Name}");
-        print($"Players connected: {PhotonNetwork.CurrentRoom.PlayerCount}");
-
-        _currentNickname.text = PhotonNetwork.NickName;
-        _currentPlayers.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
-        _currentRoom.text = PhotonNetwork.CurrentRoom.Name;
-
-        _lobbyPanel.SetActive(false);
-        _roomPanel.SetActive(true);
-        _cameraUI.SetActive(false);
-
-        SpawnPlayer();
+        PlayerToWorld();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

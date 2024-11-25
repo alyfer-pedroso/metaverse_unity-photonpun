@@ -7891,6 +7891,10 @@ PrefabInstance:
       value: NetworkManager
       objectReference: {fileID: 0}
     - target: {fileID: 5980456504547223900, guid: 07a7ba3a468edbe4fac946053683644f, type: 3}
+      propertyPath: _isLocal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5980456504547223900, guid: 07a7ba3a468edbe4fac946053683644f, type: 3}
       propertyPath: _cameraUI
       value: 
       objectReference: {fileID: 732107968}

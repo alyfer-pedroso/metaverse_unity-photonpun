@@ -184,7 +184,7 @@ namespace StarterAssets
         private void Start()
         {
 
-            if (_pv.IsMine || _networkManager._isInTesting)
+            if (_pv.IsMine || _networkManager._isLocal)
             {
                 _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
@@ -209,12 +209,12 @@ namespace StarterAssets
                 _jumpTimeoutDelta = JumpTimeout;
                 _fallTimeoutDelta = FallTimeout;
             }
-            _nickname.text = _networkManager._isInTesting ? "Testing Player" : _pv.Owner.NickName;
+            _nickname.text = _networkManager._isLocal ? _networkManager._localPlayerNickname : _pv.Owner.NickName;
         }
 
         private void Update()
         {
-            if (_pv.IsMine || _networkManager._isInTesting)
+            if (_pv.IsMine || _networkManager._isLocal)
             {
                 _hasAnimator = TryGetComponent(out _animator);
                 JumpAndGravity();
@@ -228,7 +228,7 @@ namespace StarterAssets
 
         private void LateUpdate()
         {
-            if (_pv.IsMine || _networkManager._isInTesting)
+            if (_pv.IsMine || _networkManager._isLocal)
                 CameraRotation();
         }
 
@@ -248,6 +248,8 @@ namespace StarterAssets
 
         private void HandleCursor()
         {
+            if (_networkManager._isLocal) return;
+
             if (Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.Escape))
                 if (_cursorLocked) UnlockCursor(); else if (!_cursorLocked && string.IsNullOrEmpty(_networkManager._chatInputField.text)) LockCursor();
 
