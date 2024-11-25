@@ -253,8 +253,8 @@ namespace StarterAssets
             if (Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.Escape))
                 if (_cursorLocked) UnlockCursor(); else if (!_cursorLocked && string.IsNullOrEmpty(_networkManager._chatInputField.text)) LockCursor();
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && !_cursorLocked)
-                LockCursor();
+            // if (Input.GetKeyDown(KeyCode.Mouse0) && !_cursorLocked)
+            //     LockCursor();
         }
 
         [PunRPC]
